@@ -1,0 +1,66 @@
+<h2>System Architecture</h2>
+<p class="subtitle">How the pieces connect — does this match your mental model?</p>
+
+<div style="margin: 2rem auto; max-width: 860px;">
+
+  <!-- Row 1: Keeta + Auth -->
+  <div style="display: flex; justify-content: center; gap: 2rem; margin-bottom: 1rem;">
+    <div style="background: #1a1a2e; border: 2px solid #e94560; border-radius: 12px; padding: 1.2rem 2rem; text-align: center; min-width: 160px;">
+      <div style="font-size: 1.5rem; margin-bottom: 0.3rem;">🛵</div>
+      <div style="font-weight: bold; color: #e94560;">Keeta Platform</div>
+      <div style="font-size: 0.75rem; color: #888; margin-top: 0.3rem;">Orders + Auth</div>
+    </div>
+    <div style="background: #1a1a2e; border: 2px solid #f5a623; border-radius: 12px; padding: 1.2rem 2rem; text-align: center; min-width: 160px;">
+      <div style="font-size: 1.5rem; margin-bottom: 0.3rem;">🌐</div>
+      <div style="font-weight: bold; color: #f5a623;">ngrok tunnel</div>
+      <div style="font-size: 0.75rem; color: #888; margin-top: 0.3rem;">Exposes localhost to Keeta</div>
+    </div>
+  </div>
+
+  <!-- Arrow down -->
+  <div style="text-align: center; font-size: 1.5rem; color: #888; margin-bottom: 1rem;">↓ HTTP POST (webhook)</div>
+
+  <!-- Row 2: Express server -->
+  <div style="display: flex; justify-content: center; margin-bottom: 0.5rem;">
+    <div style="background: #0f3460; border: 2px solid #4ecdc4; border-radius: 12px; padding: 1.5rem 3rem; text-align: center; min-width: 420px;">
+      <div style="font-size: 1.5rem; margin-bottom: 0.3rem;">⚙️</div>
+      <div style="font-weight: bold; color: #4ecdc4; font-size: 1.1rem;">Express Server (Node.js)</div>
+      <div style="display: flex; justify-content: center; gap: 1.5rem; margin-top: 0.8rem; flex-wrap: wrap;">
+        <div style="background: #1a3a5c; border-radius: 8px; padding: 0.4rem 0.8rem; font-size: 0.75rem; color: #ccc;">
+          <span style="color: #4ecdc4;">POST</span> /webhook — receive orders
+        </div>
+        <div style="background: #1a3a5c; border-radius: 8px; padding: 0.4rem 0.8rem; font-size: 0.75rem; color: #ccc;">
+          <span style="color: #4ecdc4;">GET</span> /events — SSE stream
+        </div>
+        <div style="background: #1a3a5c; border-radius: 8px; padding: 0.4rem 0.8rem; font-size: 0.75rem; color: #ccc;">
+          <span style="color: #4ecdc4;">POST</span> /orders/:id/confirm
+        </div>
+        <div style="background: #1a3a5c; border-radius: 8px; padding: 0.4rem 0.8rem; font-size: 0.75rem; color: #ccc;">
+          <span style="color: #4ecdc4;">POST</span> /orders/:id/ready
+        </div>
+        <div style="background: #1a3a5c; border-radius: 8px; padding: 0.4rem 0.8rem; font-size: 0.75rem; color: #ccc;">
+          <span style="color: #4ecdc4;">POST</span> /orders/:id/cancel
+        </div>
+      </div>
+      <div style="margin-top: 0.8rem; font-size: 0.75rem; color: #666;">Also calls back to Keeta API to confirm/reject actions</div>
+    </div>
+  </div>
+
+  <!-- Arrow down SSE -->
+  <div style="text-align: center; font-size: 1.5rem; color: #888; margin-bottom: 1rem;">↕ SSE (push) + REST (actions)</div>
+
+  <!-- Row 3: Browser -->
+  <div style="display: flex; justify-content: center; margin-bottom: 1rem;">
+    <div style="background: #1a1a2e; border: 2px solid #a29bfe; border-radius: 12px; padding: 1.2rem 2.5rem; text-align: center; min-width: 320px;">
+      <div style="font-size: 1.5rem; margin-bottom: 0.3rem;">🖥️</div>
+      <div style="font-weight: bold; color: #a29bfe;">PDV Browser Interface</div>
+      <div style="font-size: 0.75rem; color: #888; margin-top: 0.3rem;">Plain HTML + CSS + Vanilla JS<br>Listens to SSE, shows order cards, sends actions</div>
+    </div>
+  </div>
+
+  <!-- Legend -->
+  <div style="border: 1px solid #333; border-radius: 10px; padding: 1rem 1.5rem; margin-top: 1.5rem; font-size: 0.8rem; color: #999;">
+    <strong style="color: #ccc;">Flow summary:</strong> Keeta sends a new order → ngrok forwards it to Express → Express stores it in memory and pushes it via SSE to the browser → Operator clicks "Confirm" → Express calls Keeta API to confirm the order.
+  </div>
+
+</div>

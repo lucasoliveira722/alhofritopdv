@@ -1,0 +1,107 @@
+<h2>Order Lifecycle (updated)</h2>
+<p class="subtitle">Two cancellation sources: operator (PDV) and Keeta platform</p>
+
+<div style="margin: 2rem auto; max-width: 860px;">
+
+  <!-- Happy path -->
+  <div style="font-size: 0.7rem; color: #4ecdc4; text-transform: uppercase; letter-spacing: 1px; text-align: center; margin-bottom: 0.8rem;">Happy path</div>
+  <div style="display: flex; align-items: flex-start; justify-content: center; gap: 0; margin-bottom: 2rem;">
+
+    <!-- PLACED -->
+    <div style="display: flex; flex-direction: column; align-items: center; min-width: 130px;">
+      <div style="background: #1a1a2e; border: 2px solid #f5a623; border-radius: 12px; padding: 0.8rem 1rem; text-align: center; width: 110px;">
+        <div style="font-size: 1.2rem; margin-bottom: 0.2rem;">🔔</div>
+        <div style="font-weight: bold; color: #f5a623; font-size: 0.8rem;">PLACED</div>
+        <div style="font-size: 0.65rem; color: #888; margin-top: 0.2rem;">via Keeta webhook</div>
+      </div>
+    </div>
+
+    <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 0 0.2rem; margin-top: 1.2rem;">
+      <div style="font-size: 0.65rem; color: #4ecdc4; margin-bottom: 0.1rem;">operator confirms</div>
+      <div style="color: #555; font-size: 1.2rem;">→</div>
+    </div>
+
+    <!-- CONFIRMED -->
+    <div style="display: flex; flex-direction: column; align-items: center; min-width: 130px;">
+      <div style="background: #1a1a2e; border: 2px solid #4ecdc4; border-radius: 12px; padding: 0.8rem 1rem; text-align: center; width: 110px;">
+        <div style="font-size: 1.2rem; margin-bottom: 0.2rem;">👨‍🍳</div>
+        <div style="font-weight: bold; color: #4ecdc4; font-size: 0.8rem;">CONFIRMED</div>
+        <div style="font-size: 0.65rem; color: #888; margin-top: 0.2rem;">In preparation</div>
+      </div>
+    </div>
+
+    <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 0 0.2rem; margin-top: 1.2rem;">
+      <div style="font-size: 0.65rem; color: #a29bfe; margin-bottom: 0.1rem;">operator marks ready</div>
+      <div style="color: #555; font-size: 1.2rem;">→</div>
+    </div>
+
+    <!-- READY -->
+    <div style="display: flex; flex-direction: column; align-items: center; min-width: 130px;">
+      <div style="background: #1a1a2e; border: 2px solid #a29bfe; border-radius: 12px; padding: 0.8rem 1rem; text-align: center; width: 110px;">
+        <div style="font-size: 1.2rem; margin-bottom: 0.2rem;">📦</div>
+        <div style="font-weight: bold; color: #a29bfe; font-size: 0.8rem;">READY</div>
+        <div style="font-size: 0.65rem; color: #888; margin-top: 0.2rem;">Awaiting pickup</div>
+      </div>
+    </div>
+
+    <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 0 0.2rem; margin-top: 1.2rem;">
+      <div style="font-size: 0.65rem; color: #888; margin-bottom: 0.1rem;">Keeta picks up</div>
+      <div style="color: #555; font-size: 1.2rem;">→</div>
+    </div>
+
+    <!-- DONE -->
+    <div style="display: flex; flex-direction: column; align-items: center; min-width: 130px;">
+      <div style="background: #1a1a2e; border: 2px solid #55efc4; border-radius: 12px; padding: 0.8rem 1rem; text-align: center; width: 110px;">
+        <div style="font-size: 1.2rem; margin-bottom: 0.2rem;">✅</div>
+        <div style="font-weight: bold; color: #55efc4; font-size: 0.8rem;">DONE</div>
+        <div style="font-size: 0.65rem; color: #888; margin-top: 0.2rem;">Moved to history</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Cancellation paths -->
+  <div style="font-size: 0.7rem; color: #e94560; text-transform: uppercase; letter-spacing: 1px; text-align: center; margin-bottom: 0.8rem;">Cancellation — two sources</div>
+
+  <div style="display: flex; gap: 1.5rem; justify-content: center; flex-wrap: wrap; margin-bottom: 2rem;">
+
+    <!-- PDV cancel -->
+    <div style="background: #1a0808; border: 2px solid #e94560; border-radius: 12px; padding: 1rem 1.5rem; max-width: 340px; flex: 1;">
+      <div style="font-weight: bold; color: #e94560; margin-bottom: 0.5rem; font-size: 0.85rem;">🖥️ Operator cancels from PDV</div>
+      <div style="font-size: 0.75rem; color: #bbb; line-height: 1.6;">
+        1. Operator clicks "Cancel" on a <span style="color: #f5a623;">PLACED</span> or <span style="color: #4ecdc4;">CONFIRMED</span> order<br>
+        2. PDV sends <code style="background:#111;padding:0 3px;border-radius:3px;">POST /orders/:id/cancel</code> to Express<br>
+        3. Express calls Keeta <code style="background:#111;padding:0 3px;border-radius:3px;">requestCancellation</code><br>
+        4. Keeta responds: approved or rejected<br>
+        5. Order status updated in DB + SSE pushed to browser
+      </div>
+    </div>
+
+    <!-- Keeta cancel -->
+    <div style="background: #0a0818; border: 2px solid #e94560; border-radius: 12px; padding: 1rem 1.5rem; max-width: 340px; flex: 1;">
+      <div style="font-weight: bold; color: #e94560; margin-bottom: 0.5rem; font-size: 0.85rem;">🛵 Keeta cancels the order</div>
+      <div style="font-size: 0.75rem; color: #bbb; line-height: 1.6;">
+        1. Keeta sends a cancellation event via webhook<br>
+        2. Express receives it at <code style="background:#111;padding:0 3px;border-radius:3px;">POST /webhook</code><br>
+        3. Express updates order status to <span style="color:#e94560;">CANCELLED</span> in DB<br>
+        4. SSE pushes update to browser immediately<br>
+        5. PDV shows the order card as cancelled (no action needed)
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Refund note -->
+  <div style="background: #1a1500; border: 2px dashed #f5a623; border-radius: 12px; padding: 0.8rem 1.5rem;">
+    <div style="font-weight: bold; color: #f5a623; margin-bottom: 0.3rem; font-size: 0.8rem;">↩ Refund Request (Keeta-initiated)</div>
+    <div style="font-size: 0.75rem; color: #bbb;">
+      Keeta may send a refund request webhook after delivery. Operator can <span style="color:#55efc4;">Accept</span> or <span style="color:#e94560;">Reject</span> from the PDV. Both paths call Keeta API and update the DB.
+    </div>
+  </div>
+
+  <!-- DB note -->
+  <div style="margin-top: 1rem; border: 1px solid #333; border-radius: 10px; padding: 0.8rem 1.2rem; font-size: 0.75rem; color: #999;">
+    <strong style="color: #ccc;">All state transitions are persisted to PostgreSQL</strong> — order status, timestamps for each transition, and the full Keeta event payload are stored for audit and history.
+  </div>
+
+</div>

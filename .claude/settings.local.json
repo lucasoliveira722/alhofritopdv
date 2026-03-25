@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:api-docs.mykeeta.com)",
+      "Bash(bash \"C:/Users/Lucas/.claude/plugins/cache/claude-plugins-official/superpowers/5.0.6/skills/brainstorming/scripts/start-server.sh\" --project-dir \"c:/Users/Lucas/Documents/Projetos/alhofritopdv\")"
+    ]
+  }
+}

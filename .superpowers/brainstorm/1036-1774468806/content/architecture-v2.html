@@ -1,0 +1,97 @@
+<h2>Updated Architecture</h2>
+<p class="subtitle">Now with PostgreSQL + Docker Compose</p>
+
+<div style="margin: 2rem auto; max-width: 900px;">
+
+  <!-- Docker Compose wrapper -->
+  <div style="border: 2px dashed #4ecdc4; border-radius: 16px; padding: 1.5rem; position: relative; margin-bottom: 1.5rem;">
+    <div style="position: absolute; top: -0.75rem; left: 1.5rem; background: #0d0d1a; padding: 0 0.5rem; font-size: 0.75rem; color: #4ecdc4; font-weight: bold;">🐳 docker-compose.yml</div>
+
+    <div style="display: flex; justify-content: center; gap: 3rem; flex-wrap: wrap;">
+
+      <!-- App container -->
+      <div style="background: #0f3460; border: 2px solid #4ecdc4; border-radius: 12px; padding: 1.2rem 1.8rem; text-align: center; min-width: 280px;">
+        <div style="font-size: 0.65rem; color: #4ecdc4; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 0.3rem;">container: app</div>
+        <div style="font-size: 1.3rem; margin-bottom: 0.3rem;">⚙️</div>
+        <div style="font-weight: bold; color: #4ecdc4;">Express Server (Node.js)</div>
+        <div style="display: flex; flex-direction: column; gap: 0.3rem; margin-top: 0.8rem;">
+          <div style="background: #1a3a5c; border-radius: 6px; padding: 0.3rem 0.7rem; font-size: 0.72rem; color: #ccc; text-align: left;">
+            <span style="color: #4ecdc4;">POST</span> /webhook — receive Keeta events
+          </div>
+          <div style="background: #1a3a5c; border-radius: 6px; padding: 0.3rem 0.7rem; font-size: 0.72rem; color: #ccc; text-align: left;">
+            <span style="color: #4ecdc4;">GET</span>  /events — SSE stream to browser
+          </div>
+          <div style="background: #1a3a5c; border-radius: 6px; padding: 0.3rem 0.7rem; font-size: 0.72rem; color: #ccc; text-align: left;">
+            <span style="color: #4ecdc4;">POST</span> /orders/:id/confirm
+          </div>
+          <div style="background: #1a3a5c; border-radius: 6px; padding: 0.3rem 0.7rem; font-size: 0.72rem; color: #ccc; text-align: left;">
+            <span style="color: #4ecdc4;">POST</span> /orders/:id/ready
+          </div>
+          <div style="background: #1a3a5c; border-radius: 6px; padding: 0.3rem 0.7rem; font-size: 0.72rem; color: #ccc; text-align: left;">
+            <span style="color: #e94560;">POST</span> /orders/:id/cancel <span style="color:#888;">(PDV-initiated)</span>
+          </div>
+          <div style="background: #1a3a5c; border-radius: 6px; padding: 0.3rem 0.7rem; font-size: 0.72rem; color: #ccc; text-align: left;">
+            <span style="color: #4ecdc4;">GET</span>  /orders — list all orders
+          </div>
+        </div>
+        <div style="margin-top: 0.6rem; font-size: 0.7rem; color: #666;">port 3000 → host</div>
+      </div>
+
+      <!-- DB container -->
+      <div style="background: #1a0f3c; border: 2px solid #a29bfe; border-radius: 12px; padding: 1.2rem 1.8rem; text-align: center; min-width: 200px;">
+        <div style="font-size: 0.65rem; color: #a29bfe; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 0.3rem;">container: db</div>
+        <div style="font-size: 1.3rem; margin-bottom: 0.3rem;">🐘</div>
+        <div style="font-weight: bold; color: #a29bfe;">PostgreSQL 16</div>
+        <div style="display: flex; flex-direction: column; gap: 0.3rem; margin-top: 0.8rem; text-align: left;">
+          <div style="background: #120a2a; border-radius: 6px; padding: 0.3rem 0.7rem; font-size: 0.72rem; color: #ccc;">
+            📋 table: <span style="color: #a29bfe;">orders</span>
+          </div>
+          <div style="background: #120a2a; border-radius: 6px; padding: 0.3rem 0.7rem; font-size: 0.72rem; color: #ccc;">
+            📋 table: <span style="color: #a29bfe;">order_items</span>
+          </div>
+          <div style="background: #120a2a; border-radius: 6px; padding: 0.3rem 0.7rem; font-size: 0.72rem; color: #ccc;">
+            📋 table: <span style="color: #a29bfe;">events_log</span>
+          </div>
+        </div>
+        <div style="margin-top: 0.6rem; font-size: 0.7rem; color: #666;">internal port 5432</div>
+      </div>
+
+    </div>
+
+    <!-- Internal arrow between containers -->
+    <div style="text-align: center; font-size: 0.75rem; color: #666; margin-top: 1rem;">
+      ← app reads/writes to db via internal Docker network →
+    </div>
+  </div>
+
+  <!-- External connections -->
+  <div style="display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap;">
+
+    <!-- Keeta side -->
+    <div style="flex: 1; min-width: 220px;">
+      <div style="text-align: center; font-size: 0.75rem; color: #888; margin-bottom: 0.5rem;">↓ webhook (POST) via ngrok</div>
+      <div style="background: #1a1a2e; border: 2px solid #e94560; border-radius: 12px; padding: 1rem; text-align: center;">
+        <div style="font-size: 1.2rem; margin-bottom: 0.2rem;">🛵</div>
+        <div style="font-weight: bold; color: #e94560; font-size: 0.9rem;">Keeta Platform</div>
+        <div style="font-size: 0.7rem; color: #888; margin-top: 0.3rem;">Sends: new orders, cancellations, refund requests</div>
+      </div>
+      <div style="margin-top: 0.5rem; background: #1a1a2e; border: 2px solid #f5a623; border-radius: 10px; padding: 0.7rem; text-align: center;">
+        <div style="font-size: 1rem; margin-bottom: 0.1rem;">🌐</div>
+        <div style="font-weight: bold; color: #f5a623; font-size: 0.8rem;">ngrok tunnel</div>
+        <div style="font-size: 0.7rem; color: #888;">dev only — bridges Keeta ↔ localhost</div>
+      </div>
+    </div>
+
+    <!-- Browser side -->
+    <div style="flex: 1; min-width: 220px;">
+      <div style="text-align: center; font-size: 0.75rem; color: #888; margin-bottom: 0.5rem;">↕ SSE push + REST actions</div>
+      <div style="background: #1a1a2e; border: 2px solid #a29bfe; border-radius: 12px; padding: 1rem; text-align: center;">
+        <div style="font-size: 1.2rem; margin-bottom: 0.2rem;">🖥️</div>
+        <div style="font-weight: bold; color: #a29bfe; font-size: 0.9rem;">PDV Browser Interface</div>
+        <div style="font-size: 0.7rem; color: #888; margin-top: 0.3rem;">Vanilla HTML/CSS/JS<br>Order cards + action buttons<br>Cancel button available on all active orders</div>
+      </div>
+    </div>
+
+  </div>
+
+</div>

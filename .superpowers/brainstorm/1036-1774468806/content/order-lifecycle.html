@@ -1,0 +1,103 @@
+<h2>Order Lifecycle</h2>
+<p class="subtitle">States an order moves through, and what actions the operator can take at each step</p>
+
+<div style="margin: 2rem auto; max-width: 800px;">
+
+  <!-- State machine flow -->
+  <div style="display: flex; align-items: flex-start; justify-content: center; gap: 0; flex-wrap: nowrap;">
+
+    <!-- PLACED -->
+    <div style="display: flex; flex-direction: column; align-items: center; min-width: 140px;">
+      <div style="background: #1a1a2e; border: 2px solid #f5a623; border-radius: 12px; padding: 1rem 1.2rem; text-align: center; width: 120px;">
+        <div style="font-size: 1.4rem; margin-bottom: 0.3rem;">🔔</div>
+        <div style="font-weight: bold; color: #f5a623; font-size: 0.85rem;">PLACED</div>
+        <div style="font-size: 0.7rem; color: #888; margin-top: 0.3rem;">Arrives via webhook</div>
+      </div>
+      <div style="margin-top: 0.5rem; font-size: 0.7rem; color: #666; text-align: center; width: 120px;">
+        Actions:<br>
+        <span style="color: #4ecdc4;">✓ Confirm</span><br>
+        <span style="color: #e94560;">✗ Cancel</span>
+      </div>
+    </div>
+
+    <!-- Arrow -->
+    <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 0 0.3rem; margin-top: 1.5rem;">
+      <div style="font-size: 0.7rem; color: #4ecdc4; margin-bottom: 0.2rem;">confirm</div>
+      <div style="color: #555; font-size: 1.2rem;">→</div>
+    </div>
+
+    <!-- CONFIRMED -->
+    <div style="display: flex; flex-direction: column; align-items: center; min-width: 140px;">
+      <div style="background: #1a1a2e; border: 2px solid #4ecdc4; border-radius: 12px; padding: 1rem 1.2rem; text-align: center; width: 120px;">
+        <div style="font-size: 1.4rem; margin-bottom: 0.3rem;">👨‍🍳</div>
+        <div style="font-weight: bold; color: #4ecdc4; font-size: 0.85rem;">CONFIRMED</div>
+        <div style="font-size: 0.7rem; color: #888; margin-top: 0.3rem;">In preparation</div>
+      </div>
+      <div style="margin-top: 0.5rem; font-size: 0.7rem; color: #666; text-align: center; width: 120px;">
+        Actions:<br>
+        <span style="color: #a29bfe;">✓ Ready</span><br>
+        <span style="color: #e94560;">✗ Cancel</span>
+      </div>
+    </div>
+
+    <!-- Arrow -->
+    <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 0 0.3rem; margin-top: 1.5rem;">
+      <div style="font-size: 0.7rem; color: #a29bfe; margin-bottom: 0.2rem;">ready</div>
+      <div style="color: #555; font-size: 1.2rem;">→</div>
+    </div>
+
+    <!-- READY -->
+    <div style="display: flex; flex-direction: column; align-items: center; min-width: 140px;">
+      <div style="background: #1a1a2e; border: 2px solid #a29bfe; border-radius: 12px; padding: 1rem 1.2rem; text-align: center; width: 120px;">
+        <div style="font-size: 1.4rem; margin-bottom: 0.3rem;">📦</div>
+        <div style="font-weight: bold; color: #a29bfe; font-size: 0.85rem;">READY</div>
+        <div style="font-size: 0.7rem; color: #888; margin-top: 0.3rem;">Waiting pickup</div>
+      </div>
+      <div style="margin-top: 0.5rem; font-size: 0.7rem; color: #666; text-align: center; width: 120px;">
+        Actions:<br>
+        <span style="color: #888;">— (terminal)</span>
+      </div>
+    </div>
+
+    <!-- Arrow -->
+    <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 0 0.3rem; margin-top: 1.5rem;">
+      <div style="font-size: 0.7rem; color: #888; margin-bottom: 0.2rem;">Keeta picks up</div>
+      <div style="color: #555; font-size: 1.2rem;">→</div>
+    </div>
+
+    <!-- DISPATCHED -->
+    <div style="display: flex; flex-direction: column; align-items: center; min-width: 140px;">
+      <div style="background: #1a1a2e; border: 2px solid #55efc4; border-radius: 12px; padding: 1rem 1.2rem; text-align: center; width: 120px;">
+        <div style="font-size: 1.4rem; margin-bottom: 0.3rem;">✅</div>
+        <div style="font-weight: bold; color: #55efc4; font-size: 0.85rem;">DONE</div>
+        <div style="font-size: 0.7rem; color: #888; margin-top: 0.3rem;">Order complete</div>
+      </div>
+      <div style="margin-top: 0.5rem; font-size: 0.7rem; color: #666; text-align: center; width: 120px;">
+        Moves to<br>history
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Cancelled branch -->
+  <div style="margin-top: 2rem; display: flex; justify-content: center;">
+    <div style="background: #1a0a0a; border: 2px dashed #e94560; border-radius: 12px; padding: 0.8rem 2rem; text-align: center; max-width: 400px;">
+      <span style="color: #e94560; font-weight: bold;">✗ CANCELLED</span>
+      <span style="color: #888; font-size: 0.8rem; margin-left: 0.5rem;">— can be requested from PLACED or CONFIRMED state. Keeta approves/rejects the request.</span>
+    </div>
+  </div>
+
+  <!-- Refund note -->
+  <div style="margin-top: 1rem; display: flex; justify-content: center;">
+    <div style="background: #1a1a0a; border: 2px dashed #f5a623; border-radius: 12px; padding: 0.8rem 2rem; text-align: center; max-width: 400px;">
+      <span style="color: #f5a623; font-weight: bold;">↩ REFUND REQUEST</span>
+      <span style="color: #888; font-size: 0.8rem; margin-left: 0.5rem;">— Keeta may send a refund request; operator can accept or reject it.</span>
+    </div>
+  </div>
+
+  <!-- Note about storage -->
+  <div style="margin-top: 2rem; border: 1px solid #333; border-radius: 10px; padding: 1rem 1.5rem; font-size: 0.8rem; color: #999;">
+    <strong style="color: #ccc;">Storage note:</strong> For this iteration, orders will be kept <strong style="color: #ccc;">in memory</strong> (a simple JS Map on the server). Orders are lost on server restart — intentionally simple. A database can be added in a future iteration.
+  </div>
+
+</div>

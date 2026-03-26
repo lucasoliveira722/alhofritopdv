@@ -1,0 +1,29 @@
+import express from 'express';
+import { config } from './config.js';
+import { migrate } from './db/migrate.js';
+
+const app = express();
+app.use(express.json());
+
+// Routes will be added in later tasks
+app.get('/health', (_req, res) => res.json({ status: 'ok' }));
+
+// Global error handler
+app.use((err, _req, res, _next) => {
+  console.error(err);
+  res.status(err.status || 500).json({ error: err.message });
+});
+
+async function start() {
+  await migrate();
+  app.listen(config.port, () => {
+    console.log(`PDV backend running on port ${config.port}`);
+  });
+}
+
+start().catch((err) => {
+  console.error('Failed to start server:', err);
+  process.exit(1);
+});
+
+export { app };

@@ -9,6 +9,7 @@ services:
       POSTGRES_DB: pdv
     volumes:
       - pgdata:/var/lib/postgresql/data
+    restart: unless-stopped
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U pdv"]
       interval: 5s
@@ -23,6 +24,13 @@ services:
     environment:
       DATABASE_URL: postgres://pdv:pdv@db:5432/pdv
       PORT: 3000
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:3000/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
     depends_on:
       db:
         condition: service_healthy

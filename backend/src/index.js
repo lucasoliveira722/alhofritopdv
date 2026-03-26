@@ -3,16 +3,17 @@ import { config } from './config.js';
 import { migrate } from './db/migrate.js';
 import { sseRouter } from './routes/sse.js';
 import { webhookRouter } from './routes/webhook.js';
+import { ordersRouter } from './routes/orders.js';
 
 const app = express();
 app.use(express.json());
 
 app.use(sseRouter);
 app.use(webhookRouter);
+app.use(ordersRouter);
 
 app.get('/health', (_req, res) => res.json({ status: 'ok' }));
 
-// Global error handler
 app.use((err, _req, res, _next) => {
   console.error(err);
   res.status(err.status || 500).json({ error: err.message });

@@ -1,11 +1,13 @@
 import express from 'express';
 import { config } from './config.js';
 import { migrate } from './db/migrate.js';
+import { sseRouter } from './routes/sse.js';
 
 const app = express();
 app.use(express.json());
 
-// Routes will be added in later tasks
+app.use(sseRouter);
+
 app.get('/health', (_req, res) => res.json({ status: 'ok' }));
 
 // Global error handler

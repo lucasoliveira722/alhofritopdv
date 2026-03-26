@@ -2,11 +2,13 @@ import express from 'express';
 import { config } from './config.js';
 import { migrate } from './db/migrate.js';
 import { sseRouter } from './routes/sse.js';
+import { webhookRouter } from './routes/webhook.js';
 
 const app = express();
 app.use(express.json());
 
 app.use(sseRouter);
+app.use(webhookRouter);
 
 app.get('/health', (_req, res) => res.json({ status: 'ok' }));
 

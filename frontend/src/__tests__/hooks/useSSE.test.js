@@ -35,7 +35,17 @@ describe('useSSE', () => {
   it('calls onReconnect when an error occurs', () => {
     const onReconnect = vi.fn();
     renderHook(() => useSSE('/api/events', vi.fn(), onReconnect));
-    mockES.onerror();
+    const handler = mockES.onerror;
+    expect(typeof handler).toBe('function');
+    handler();
     expect(onReconnect).toHaveBeenCalled();
+  });
+
+  it('calls onMessage with parsed data when order:new event fires', () => {
+    const onMessage = vi.fn();
+    renderHook(() => useSSE('/api/events', onMessage, vi.fn()));
+    const [, handler] = mockES.addEventListener.mock.calls.find(([event]) => event === 'order:new');
+    handler({ data: JSON.stringify({ id: '123', status: 'PLACED' }) });
+    expect(onMessage).toHaveBeenCalledWith('order:new', { id: '123', status: 'PLACED' });
   });
 });

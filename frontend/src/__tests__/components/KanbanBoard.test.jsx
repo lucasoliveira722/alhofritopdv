@@ -23,4 +23,15 @@ describe('KanbanBoard', () => {
     expect(screen.getByText('Confirmed (1)')).toBeInTheDocument();
     expect(screen.getByText('Ready (1)')).toBeInTheDocument();
   });
+
+  it('does not show orders in the wrong column', () => {
+    const twoPlaced = [
+      { id: 'p1', status: 'PLACED', items: [], total_price: '10.00' },
+      { id: 'p2', status: 'PLACED', items: [], total_price: '15.00' },
+    ];
+    render(<KanbanBoard orders={twoPlaced} onUpdate={() => {}} />);
+    expect(screen.getByText('Placed (2)')).toBeInTheDocument();
+    expect(screen.getByText('Confirmed (0)')).toBeInTheDocument();
+    expect(screen.getByText('Ready (0)')).toBeInTheDocument();
+  });
 });

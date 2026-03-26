@@ -6,7 +6,7 @@ export function OrderColumn({ title, orders, onUpdate }) {
       <h2 style={{ fontSize: '1rem', marginBottom: '0.75rem' }}>
         {title} ({orders.length})
       </h2>
-      <div>
+      <div style={{ overflowY: 'auto', maxHeight: 'calc(100vh - 8rem)' }}>
         {orders.map((order) => (
           <OrderCard key={order.id} order={order} onUpdate={onUpdate} />
         ))}

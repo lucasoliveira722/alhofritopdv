@@ -13,7 +13,7 @@ describe('KanbanBoard', () => {
     render(<KanbanBoard orders={orders} onUpdate={() => {}} />);
     expect(screen.getByText(/Placed/i)).toBeInTheDocument();
     expect(screen.getByText(/Confirmed/i)).toBeInTheDocument();
-    expect(screen.getByText(/Ready/i)).toBeInTheDocument();
+    expect(screen.getByText('Ready (1)')).toBeInTheDocument();
   });
 
   it('puts each order in the correct column', () => {

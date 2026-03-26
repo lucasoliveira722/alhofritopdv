@@ -10,6 +10,10 @@ const baseOrder = {
 };
 
 describe('OrderCard', () => {
+  beforeEach(() => {
+    global.fetch = vi.fn();
+  });
+
   it('renders order items and total', () => {
     render(<OrderCard order={{ ...baseOrder, status: 'PLACED' }} onUpdate={() => {}} />);
     expect(screen.getByText(/X-Burger/)).toBeInTheDocument();
@@ -55,5 +59,14 @@ describe('OrderCard', () => {
     await userEvent.click(screen.getByRole('button', { name: /confirm/i }));
 
     expect(screen.getByText(/Invalid transition/)).toBeInTheDocument();
+  });
+
+  it('shows network error when fetch throws', async () => {
+    global.fetch = vi.fn().mockRejectedValue(new Error('Failed to fetch'));
+
+    render(<OrderCard order={{ ...baseOrder, status: 'PLACED' }} onUpdate={() => {}} />);
+    await userEvent.click(screen.getByRole('button', { name: /confirm/i }));
+
+    expect(screen.getByText(/Network error/)).toBeInTheDocument();
   });
 });

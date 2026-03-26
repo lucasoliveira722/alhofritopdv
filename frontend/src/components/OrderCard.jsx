@@ -10,8 +10,14 @@ export function OrderCard({ order, onUpdate }) {
     try {
       const res = await fetch(`/api/orders/${order.id}/${type}`, { method: 'POST' });
       if (!res.ok) {
-        const data = await res.json();
-        setError(data.error ?? 'Action failed');
+        let errorMsg = 'Action failed';
+        try {
+          const data = await res.json();
+          errorMsg = data.error ?? errorMsg;
+        } catch {
+          // server returned a non-JSON body — keep the generic message
+        }
+        setError(errorMsg);
       } else {
         onUpdate();
       }

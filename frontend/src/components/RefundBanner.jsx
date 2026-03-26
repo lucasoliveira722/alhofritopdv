@@ -39,13 +39,13 @@ export function RefundBanner({ orders, onUpdate }) {
           {errors[order.id] && <span style={{ color: 'red' }}>{errors[order.id]}</span>}
           <button
             onClick={() => doAction(order.id, 'acceptRefund')}
-            disabled={!!loading}
+            disabled={loading === `${order.id}:acceptRefund` || loading === `${order.id}:rejectRefund`}
           >
             Accept
           </button>
           <button
             onClick={() => doAction(order.id, 'rejectRefund')}
-            disabled={!!loading}
+            disabled={loading === `${order.id}:acceptRefund` || loading === `${order.id}:rejectRefund`}
           >
             Reject
           </button>

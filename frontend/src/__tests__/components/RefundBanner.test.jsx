@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { RefundBanner } from '../../components/RefundBanner.jsx';
 
 const pendingOrders = [
@@ -8,6 +8,8 @@ const pendingOrders = [
 ];
 
 describe('RefundBanner', () => {
+  beforeEach(() => { global.fetch = vi.fn(); });
+
   it('renders nothing when there are no pending refunds', () => {
     const { container } = render(<RefundBanner orders={[]} onUpdate={() => {}} />);
     expect(container).toBeEmptyDOMElement();
@@ -30,5 +32,28 @@ describe('RefundBanner', () => {
 
     expect(fetch).toHaveBeenCalledWith('/api/orders/abc123def456/acceptRefund', { method: 'POST' });
     expect(onUpdate).toHaveBeenCalled();
+  });
+
+  it('calls rejectRefund endpoint and onUpdate when Reject is clicked', async () => {
+    const onUpdate = vi.fn();
+    global.fetch = vi.fn().mockResolvedValue({ ok: true, json: async () => ({}) });
+
+    render(<RefundBanner orders={pendingOrders} onUpdate={onUpdate} />);
+    await userEvent.click(screen.getByRole('button', { name: /reject/i }));
+
+    expect(fetch).toHaveBeenCalledWith('/api/orders/abc123def456/rejectRefund', { method: 'POST' });
+    expect(onUpdate).toHaveBeenCalled();
+  });
+
+  it('shows error message when action fails', async () => {
+    global.fetch = vi.fn().mockResolvedValue({
+      ok: false,
+      json: async () => ({ error: 'Refund already processed' }),
+    });
+
+    render(<RefundBanner orders={pendingOrders} onUpdate={() => {}} />);
+    await userEvent.click(screen.getByRole('button', { name: /accept/i }));
+
+    expect(screen.getByText(/Refund already processed/)).toBeInTheDocument();
   });
 });

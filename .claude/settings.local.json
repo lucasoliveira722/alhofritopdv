@@ -2,7 +2,19 @@
   "permissions": {
     "allow": [
       "WebFetch(domain:api-docs.mykeeta.com)",
-      "Bash(bash \"C:/Users/Lucas/.claude/plugins/cache/claude-plugins-official/superpowers/5.0.6/skills/brainstorming/scripts/start-server.sh\" --project-dir \"c:/Users/Lucas/Documents/Projetos/alhofritopdv\")"
+      "Bash(bash \"C:/Users/Lucas/.claude/plugins/cache/claude-plugins-official/superpowers/5.0.6/skills/brainstorming/scripts/start-server.sh\" --project-dir \"c:/Users/Lucas/Documents/Projetos/alhofritopdv\")",
+      "Bash(npm install:*)",
+      "Bash(npm test:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(xargs grep:*)",
+      "Bash(node -e \"import\\(''./src/index.js''\\).catch\\(e => console.log\\(''Import error:'', e.message\\)\\)\")",
+      "Bash(node -e \":*)",
+      "Bash(git checkout:*)",
+      "Bash(docker build:*)",
+      "Bash(git -C C:/Users/Lucas/Documents/Projetos/alhofritopdv branch)",
+      "Bash(echo \"EXIT_CODE: $?\")",
+      "Bash(npm ls:*)"
     ]
   }
 }
